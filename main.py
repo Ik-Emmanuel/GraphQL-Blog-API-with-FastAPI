@@ -1,3 +1,6 @@
+from ast import mod
+from dataclasses import field
+from re import T
 import strawberry
 from fastapi import FastAPI
 from strawberry.fastapi import  GraphQLRouter
@@ -18,6 +21,12 @@ class Post:
     author: str
     time_created: str
 
+@strawberry.type
+class PostMutation:
+    title: str
+    content: str
+    author: str
+
 
 def get_blogs():
     data = db_session.query(models.Post).all()
@@ -32,14 +41,14 @@ class Query:
 @strawberry.type
 class Mutation:
     @strawberry.mutation
-    def add_post(self, title:str,  content:str, author:str) -> Post:
+    def add_post(self, title:str,  content:str, author:str) -> PostMutation:
         post = PostSchema(title=title, content=content, author=author)
         db_post = models.Post(title=post.title, content=post.content, author=post.author)
         db.add(db_post)
         db.commit()
         db.refresh(db_post)
         print(f"Adding {title} by {author}")
-        return Post(title=title, content=content, author=author)
+        return PostMutation(title=title, content=content, author=author)
 
 
 
