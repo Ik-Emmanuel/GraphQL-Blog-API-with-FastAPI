@@ -1,0 +1,6 @@
+.gitginore
+/alembic/__pycache__
+/venv
+*.env
+*.gitginore
+/alembic/versions
